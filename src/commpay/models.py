@@ -34,7 +34,8 @@ class RecipientInfo(BaseModel):
     first_name: Optional[str] = Field(None, description="First name (if individual)")
     last_name: Optional[str] = Field(None, description="Last name (if individual)")
     codice_fiscale: str = Field(..., min_length=1, description="Codice Fiscale (tax code)")
-    street: str = Field(..., min_length=1, description="Street address")
+    street: str = Field(..., min_length=1, description="Street name")
+    street_number: str = Field(..., min_length=1, description="Street number")
     city: str = Field(..., min_length=1, description="City")
 
 

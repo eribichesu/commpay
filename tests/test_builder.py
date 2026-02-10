@@ -38,7 +38,8 @@ def sample_recipient():
         is_company=True,
         company_name="Test Company",
         codice_fiscale="12345678901",
-        street="Via Verdi 45",
+        street="Via Verdi",
+        street_number="45",
         city="Roma"
     )
 
@@ -122,7 +123,8 @@ class TestDocumentBuilder:
                 is_company=True,
                 company_name="Seller Corp",
                 codice_fiscale="12345678901",
-                street="Via Seller 1",
+                street="Via Seller",
+                street_number="1",
                 city="Milano"
             ),
             RecipientInfo(
@@ -131,7 +133,8 @@ class TestDocumentBuilder:
                 first_name="Giovanni",
                 last_name="Verdi",
                 codice_fiscale="VRDGNN85M01F205Z",
-                street="Via Buyer 2",
+                street="Via Buyer",
+                street_number="2",
                 city="Roma"
             )
         ]
@@ -265,7 +268,8 @@ class TestDocumentBuilder:
                 first_name="Mario",
                 last_name="Rossi",
                 codice_fiscale="RSSMRA80A01H501X",
-                street="Via Seller 1",
+                street="Via Seller",
+                street_number="1",
                 city="Milano"
             ),
             RecipientInfo(
@@ -273,7 +277,8 @@ class TestDocumentBuilder:
                 is_company=True,
                 company_name="Buyer Corp",
                 codice_fiscale="98765432101",
-                street="Via Buyer 2",
+                street="Via Buyer",
+                street_number="2",
                 city="Roma"
             )
         ]

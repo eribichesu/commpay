@@ -77,7 +77,8 @@ def get_commission_data() -> CommissionAcknowledgementData:
             last_name = input("    Last name: ").strip()
         
         codice_fiscale = input("    Codice Fiscale (CF): ").strip()
-        street = input("    Street address: ").strip()
+        street = input("    Street name: ").strip()
+        street_number = input("    Street number: ").strip()
         city = input("    City: ").strip()
         
         recipients.append(RecipientInfo(
@@ -88,6 +89,7 @@ def get_commission_data() -> CommissionAcknowledgementData:
             last_name=last_name,
             codice_fiscale=codice_fiscale,
             street=street,
+            street_number=street_number,
             city=city,
         ))
         

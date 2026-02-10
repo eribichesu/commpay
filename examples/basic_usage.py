@@ -41,7 +41,8 @@ def main():
                 is_company=True,
                 company_name="Seller Properties S.r.l.",
                 codice_fiscale="98765432101",
-                street="Corso Buenos Aires 100",
+                street="Corso Buenos Aires",
+                street_number="100",
                 city="Milano"
             ),
             RecipientInfo(
@@ -50,7 +51,8 @@ def main():
                 first_name="Marco",
                 last_name="Bianchi",
                 codice_fiscale="BNCMRC75D15F205X",
-                street="Via Dante 50",
+                street="Via Dante",
+                street_number="50",
                 city="Roma"
             )
         ],

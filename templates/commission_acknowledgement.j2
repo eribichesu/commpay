@@ -11,7 +11,7 @@ Spett.le
 {{ recipient.first_name }} {{ recipient.last_name }}
 {% endif %}
 ({% if recipient.role == 'Buyer' %}Acquirente{% elif recipient.role == 'Seller' %}Venditore{% elif recipient.role == 'Landlord' %}Locatore{% elif recipient.role == 'Tenant' %}Conduttore{% else %}{{ recipient.role }}{% endif %})
-{{ recipient.street }}
+{{ recipient.street }}, n. {{ recipient.street_number }}
 {{ recipient.city }}
 CF: {{ recipient.codice_fiscale }}
 {% if not loop.last %}

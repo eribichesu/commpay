@@ -336,7 +336,7 @@ class DocumentBuilder:
             y_pos -= 4*mm
             c.drawString(35*mm, y_pos, f"CF: {recipient.codice_fiscale}")
             y_pos -= 4*mm
-            c.drawString(35*mm, y_pos, f"Address: {recipient.street}, {recipient.city}")
+            c.drawString(35*mm, y_pos, f"Address: {recipient.street} {recipient.street_number}, {recipient.city}")
             y_pos -= 5*mm
         y_pos -= 5*mm
         
