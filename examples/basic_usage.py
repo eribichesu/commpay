@@ -8,7 +8,6 @@ from decimal import Decimal
 from commpay.builder import DocumentBuilder
 from commpay.models import (
     CommissionAcknowledgementData,
-    CreditNoteData,
     AgencyInfo,
     RecipientInfo,
     PropertyInfo,
@@ -31,33 +30,8 @@ def main():
         bank_account_beneficiary="Premium Real Estate S.r.l."
     )
     
-    # Example 1: Create a credit note
-    print("Creating credit note...")
-    credit_note_data = CreditNoteData(
-        document_date=date(2026, 2, 10),
-        document_number="CN-2026-001",
-        agency=agency,
-        recipient=RecipientInfo(
-            role="Buyer",
-            is_company=True,
-            company_name="ABC Properties Ltd",
-            codice_fiscale="12345678901",
-            street="Via Verdi 45",
-            city="Roma"
-        ),
-        amount=Decimal("1500.00"),
-        description="Credit note for property transaction cancellation",
-        reference_document="INV-2026-050"
-    )
-    
-    credit_note_path = builder.create_credit_note(
-        credit_note_data,
-        "example_credit_note.pdf"
-    )
-    print(f"✓ Credit note created: {credit_note_path}")
-    
-    # Example 2: Create a commission acknowledgement
-    print("\nCreating commission acknowledgement...")
+    # Create a commission acknowledgement
+    print("Creating commission acknowledgement...")
     commission_data = CommissionAcknowledgementData(
         document_date=date(2026, 2, 10),
         agency=agency,
@@ -107,37 +81,8 @@ def main():
     )
     print(f"✓ Commission acknowledgement created: {commission_path}")
     
-    # Example 3: Using dictionaries (alternative approach)
-    print("\nCreating document from dictionary...")
-    dict_data = {
-        "document_date": "2026-02-10",
-        "document_number": "CN-2026-002",
-        "agency": {
-            "name": "Test Agency",
-            "street": "Test Street",
-            "street_number": "1",
-            "city": "Test City",
-            "iban": "IT60X0542811101000000123456",
-            "bank": "Test Bank",
-            "bank_account_beneficiary": "Test Agency S.r.l.",
-        },
-        "recipient": {
-            "role": "Seller",
-            "is_company": True,
-            "company_name": "Test Company",
-            "codice_fiscale": "11223344556",
-            "street": "Test Address",
-            "city": "Test City"
-        },
-        "amount": 500.00,
-        "description": "Test credit note"
-    }
-    
-    dict_path = builder.create_credit_note(dict_data, "example_from_dict.pdf")
-    print(f"✓ Document from dictionary created: {dict_path}")
-    
-    print("\n✓ All documents generated successfully!")
-    print(f"  Check the 'output' directory for generated PDFs")
+    print("\n✓ Document generated successfully!")
+    print(f"  Check the 'output' directory for generated PDF")
 
 
 if __name__ == "__main__":

@@ -10,7 +10,6 @@ __author__ = "Edoardo Ribichesu"
 from commpay.builder import DocumentBuilder
 from commpay.models import (
     CommissionAcknowledgementData,
-    CreditNoteData,
     AgencyInfo,
     RecipientInfo,
     PropertyInfo,
@@ -20,7 +19,6 @@ from commpay.models import (
 __all__ = [
     "DocumentBuilder",
     "CommissionAcknowledgementData",
-    "CreditNoteData",
     "AgencyInfo",
     "RecipientInfo",
     "PropertyInfo",

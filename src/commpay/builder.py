@@ -14,7 +14,7 @@ from reportlab.lib.units import mm
 from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 
-from commpay.models import CommissionAcknowledgementData, CreditNoteData
+from commpay.models import CommissionAcknowledgementData
 
 
 class DocumentBuilder:
@@ -22,7 +22,6 @@ class DocumentBuilder:
     Main class for building PDF commercial documents.
     
     Supports generation of:
-    - Credit notes
     - Commission acknowledgements
     """
     
@@ -35,40 +34,6 @@ class DocumentBuilder:
         """
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
-    
-    def create_credit_note(
-        self,
-        data: Union[CreditNoteData, Dict[str, Any]],
-        output_filename: Optional[str] = None
-    ) -> Path:
-        """
-        Generate a credit note PDF document.
-        
-        Args:
-            data: CreditNoteData model or dictionary containing document data
-            output_filename: Optional custom filename for the output PDF
-            
-        Returns:
-            Path to the generated PDF file
-        """
-        # Validate and convert data
-        if isinstance(data, dict):
-            data = CreditNoteData(**data)
-        
-        if output_filename is None:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"credit_note_{timestamp}.pdf"
-        
-        output_path = self.output_dir / output_filename
-        
-        # Create PDF
-        c = canvas.Canvas(str(output_path), pagesize=A4)
-        
-        # Add document content
-        self._add_credit_note_content(c, data)
-        
-        c.save()
-        return output_path
     
     def create_commission_acknowledgement(
         self,
@@ -103,95 +68,6 @@ class DocumentBuilder:
         
         c.save()
         return output_path
-    
-    def _add_credit_note_content(self, c: canvas.Canvas, data: CreditNoteData) -> None:
-        """
-        Add credit note content to the PDF.
-        
-        Args:
-            c: ReportLab canvas object
-            data: CreditNoteData model
-        """
-        width, height = A4
-        y_pos = height - 20*mm
-        
-        # Title
-        c.setFont("Helvetica-Bold", 18)
-        c.drawString(30*mm, y_pos, "CREDIT NOTE")
-        y_pos -= 10*mm
-        
-        # Document info
-        c.setFont("Helvetica", 10)
-        c.drawString(30*mm, y_pos, f"Document Number: {data.document_number}")
-        c.drawRightString(width - 30*mm, y_pos, f"Date: {data.document_date.strftime('%d/%m/%Y')}")
-        y_pos -= 15*mm
-        
-        # Agency (From)
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(30*mm, y_pos, "FROM:")
-        y_pos -= 5*mm
-        c.setFont("Helvetica", 10)
-        c.drawString(30*mm, y_pos, data.agency.name)
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, f"{data.agency.street} {data.agency.street_number}")
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, data.agency.city)
-        y_pos -= 10*mm
-        
-        # Recipient (To)
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(30*mm, y_pos, "TO:")
-        y_pos -= 5*mm
-        c.setFont("Helvetica", 10)
-        if data.recipient.is_company:
-            c.drawString(30*mm, y_pos, data.recipient.company_name)
-            y_pos -= 4*mm
-        else:
-            c.drawString(30*mm, y_pos, f"{data.recipient.first_name} {data.recipient.last_name}")
-            y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, f"({data.recipient.role})")
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, f"CF: {data.recipient.codice_fiscale}")
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, data.recipient.street)
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, data.recipient.city)
-        y_pos -= 15*mm
-        
-        # Description
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(30*mm, y_pos, "Description:")
-        y_pos -= 5*mm
-        c.setFont("Helvetica", 10)
-        
-        # Handle multi-line description
-        desc_lines = self._wrap_text(data.description, 150)
-        for line in desc_lines:
-            c.drawString(30*mm, y_pos, line)
-            y_pos -= 4*mm
-        y_pos -= 10*mm
-        
-        # Amount
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(30*mm, y_pos, f"Amount: EUR {data.amount:.2f}")
-        y_pos -= 15*mm
-        
-        # Reference document if present
-        if data.reference_document:
-            c.setFont("Helvetica", 9)
-            c.drawString(30*mm, y_pos, f"Reference: {data.reference_document}")
-            y_pos -= 10*mm
-        
-        # Bank details
-        c.setFont("Helvetica-Bold", 11)
-        c.drawString(30*mm, y_pos, "Bank Details:")
-        y_pos -= 5*mm
-        c.setFont("Helvetica", 9)
-        c.drawString(30*mm, y_pos, f"Beneficiary: {data.agency.bank_account_beneficiary}")
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, f"Bank: {data.agency.bank}")
-        y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, f"IBAN: {data.agency.iban}")
     
     def _add_commission_acknowledgement_content(
         self, 

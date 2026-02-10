@@ -9,7 +9,6 @@ from pathlib import Path
 from commpay.builder import DocumentBuilder
 from commpay.models import (
     CommissionAcknowledgementData,
-    CreditNoteData,
     AgencyInfo,
     RecipientInfo,
     PropertyInfo,
@@ -74,58 +73,6 @@ class TestDocumentBuilder:
         
         assert output_dir.exists()
         assert builder.output_dir == output_dir
-    
-    def test_create_credit_note_with_model(
-        self, 
-        tmp_path, 
-        sample_agency, 
-        sample_recipient
-    ):
-        """Test credit note generation with Pydantic model."""
-        builder = DocumentBuilder(str(tmp_path))
-        
-        credit_note_data = CreditNoteData(
-            document_date=date(2026, 2, 10),
-            document_number="CN-2026-001",
-            agency=sample_agency,
-            recipient=sample_recipient,
-            amount=Decimal("1500.50"),
-            description="Test credit note",
-            reference_document="INV-001"
-        )
-        
-        output_path = builder.create_credit_note(credit_note_data, "test_credit_note.pdf")
-        
-        assert output_path.exists()
-        assert output_path.name == "test_credit_note.pdf"
-        assert output_path.suffix == ".pdf"
-        assert output_path.stat().st_size > 0
-    
-    def test_create_credit_note_with_dict(self, tmp_path, sample_agency):
-        """Test credit note generation with dictionary."""
-        builder = DocumentBuilder(str(tmp_path))
-        
-        data = {
-            "document_date": "2026-02-10",
-            "document_number": "CN-2026-002",
-            "agency": sample_agency.model_dump(),
-            "recipient": {
-                "role": "Seller",
-                "is_company": False,
-                "first_name": "Mario",
-                "last_name": "Rossi",
-                "codice_fiscale": "RSSMRA80A01H501X",
-                "street": "Via Test 1",
-                "city": "Torino"
-            },
-            "amount": 2500.00,
-            "description": "Test description"
-        }
-        
-        output_path = builder.create_credit_note(data, "test_dict.pdf")
-        
-        assert output_path.exists()
-        assert output_path.suffix == ".pdf"
     
     def test_create_commission_acknowledgement_with_model(
         self,
@@ -207,15 +154,31 @@ class TestDocumentBuilder:
         
         assert output_path.exists()
     
-    def test_validation_error_on_invalid_data(self, tmp_path):
+    def test_validation_error_on_invalid_data(
+        self, 
+        tmp_path,
+        sample_agency
+    ):
         """Test that validation errors are raised for invalid data."""
         builder = DocumentBuilder(str(tmp_path))
         
         invalid_data = {
             "document_date": "2026-02-10",
-            "document_number": "CN-001",
-            "amount": -100  # Invalid: negative amount
+            "agency": sample_agency.model_dump(),
+            "recipients": [],  # Invalid: empty recipients list
+            "property": {
+                "city_or_location": "Milano",
+                "street": "Via Test",
+                "street_number": "1"
+            },
+            "signatories": [{
+                "name": "Test",
+                "role": "Test"
+            }],
+            "deal_type": "sale",
+            "commission_amount": -100,  # Invalid: negative amount
+            "commission_due_on": "deed"
         }
         
         with pytest.raises(Exception):  # Pydantic will raise validation error
-            builder.create_credit_note(invalid_data)
+            builder.create_commission_acknowledgement(invalid_data)
