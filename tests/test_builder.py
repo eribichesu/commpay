@@ -182,3 +182,116 @@ class TestDocumentBuilder:
         
         with pytest.raises(Exception):  # Pydantic will raise validation error
             builder.create_commission_acknowledgement(invalid_data)
+    
+    def test_render_template(
+        self,
+        tmp_path,
+        sample_agency,
+        sample_recipient,
+        sample_property,
+        sample_signatory
+    ):
+        """Test Jinja2 template rendering."""
+        builder = DocumentBuilder(str(tmp_path))
+        
+        commission_data = CommissionAcknowledgementData(
+            document_date=date(2026, 2, 10),
+            agency=sample_agency,
+            recipients=[sample_recipient],
+            property=sample_property,
+            signatories=[sample_signatory],
+            deal_type="sale",
+            commission_amount=Decimal("5000.00"),
+            commission_due_on="notary deed"
+        )
+        
+        rendered = builder.render_template("commission_acknowledgement.j2", commission_data)
+        
+        assert "Test Real Estate" in rendered
+        assert "Test Company" in rendered
+        assert "Milano" in rendered
+        assert "5000.00" in rendered
+        assert "Mario Rossi" in rendered
+    
+    def test_create_commission_from_template(
+        self,
+        tmp_path,
+        sample_agency,
+        sample_recipient,
+        sample_property,
+        sample_signatory
+    ):
+        """Test PDF generation from Jinja2 template."""
+        builder = DocumentBuilder(str(tmp_path))
+        
+        commission_data = CommissionAcknowledgementData(
+            document_date=date(2026, 2, 10),
+            agency=sample_agency,
+            recipients=[sample_recipient],
+            property=sample_property,
+            signatories=[sample_signatory],
+            deal_type="sale",
+            commission_amount=Decimal("5000.00"),
+            commission_due_on="notary deed"
+        )
+        
+        output_path = builder.create_commission_acknowledgement_from_template(
+            commission_data,
+            "commission_acknowledgement.j2",
+            "test_template.pdf"
+        )
+        
+        assert output_path.exists()
+        assert output_path.name == "test_template.pdf"
+        assert output_path.suffix == ".pdf"
+        assert output_path.stat().st_size > 0
+    
+    def test_template_with_multiple_recipients(
+        self,
+        tmp_path,
+        sample_agency,
+        sample_property,
+        sample_signatory
+    ):
+        """Test template rendering with multiple recipients."""
+        builder = DocumentBuilder(str(tmp_path))
+        
+        recipients = [
+            RecipientInfo(
+                role="Seller",
+                is_company=False,
+                first_name="Mario",
+                last_name="Rossi",
+                codice_fiscale="RSSMRA80A01H501X",
+                street="Via Seller 1",
+                city="Milano"
+            ),
+            RecipientInfo(
+                role="Buyer",
+                is_company=True,
+                company_name="Buyer Corp",
+                codice_fiscale="98765432101",
+                street="Via Buyer 2",
+                city="Roma"
+            )
+        ]
+        
+        commission_data = CommissionAcknowledgementData(
+            document_date=date(2026, 2, 10),
+            agency=sample_agency,
+            recipients=recipients,
+            property=sample_property,
+            signatories=[sample_signatory],
+            deal_type="lease",
+            commission_amount=Decimal("3500.00"),
+            commission_due_on="contract signing"
+        )
+        
+        rendered = builder.render_template("commission_acknowledgement.j2", commission_data)
+        
+        assert "Mario Rossi" in rendered
+        assert "Buyer Corp" in rendered
+        assert "RSSMRA80A01H501X" in rendered
+        assert "98765432101" in rendered
+        assert "lease" in rendered
+

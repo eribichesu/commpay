@@ -81,8 +81,17 @@ def main():
     )
     print(f"✓ Commission acknowledgement created: {commission_path}")
     
-    print("\n✓ Document generated successfully!")
-    print(f"  Check the 'output' directory for generated PDF")
+    # Example using Jinja2 template
+    print("\nCreating commission acknowledgement from Jinja2 template...")
+    template_path = builder.create_commission_acknowledgement_from_template(
+        commission_data,
+        "commission_acknowledgement.j2",
+        "example_commission_template.pdf"
+    )
+    print(f"✓ Commission acknowledgement from template created: {template_path}")
+    
+    print("\n✓ Documents generated successfully!")
+    print(f"  Check the 'output' directory for generated PDFs")
 
 
 if __name__ == "__main__":
