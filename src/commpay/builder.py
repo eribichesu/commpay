@@ -147,6 +147,7 @@ class DocumentBuilder:
         
         c.setFont("Helvetica", 10)
         
+        is_first_line = True
         for line in text.split('\n'):
             # Check if we need a new page
             if y_pos < bottom_margin:
@@ -170,7 +171,14 @@ class DocumentBuilder:
                     y_pos = height - top_margin
                 
                 # Apply formatting based on content
-                if wrapped_line.startswith('Oggetto:'):
+                if is_first_line and wrapped_line.strip():
+                    # First line is the agency name - make it bold
+                    c.setFont("Helvetica-Bold", 12)
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    c.setFont("Helvetica", 10)
+                    y_pos -= line_height * 1.3
+                    is_first_line = False
+                elif wrapped_line.startswith('Oggetto:'):
                     c.setFont("Helvetica-Bold", 11)
                     c.drawString(left_margin, y_pos, wrapped_line)
                     c.setFont("Helvetica", 10)
