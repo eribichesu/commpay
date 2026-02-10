@@ -8,5 +8,21 @@ __version__ = "0.1.0"
 __author__ = "Edoardo Ribichesu"
 
 from commpay.builder import DocumentBuilder
+from commpay.models import (
+    CommissionAcknowledgementData,
+    CreditNoteData,
+    AgencyInfo,
+    RecipientInfo,
+    PropertyInfo,
+    SignatoryInfo,
+)
 
-__all__ = ["DocumentBuilder"]
+__all__ = [
+    "DocumentBuilder",
+    "CommissionAcknowledgementData",
+    "CreditNoteData",
+    "AgencyInfo",
+    "RecipientInfo",
+    "PropertyInfo",
+    "SignatoryInfo",
+]
