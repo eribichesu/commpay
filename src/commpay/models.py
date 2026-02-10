@@ -92,6 +92,10 @@ class CommissionAcknowledgementData(BaseModel):
         min_length=1,
         description="When commission is due (e.g., 'notary deed', 'lease contract registration')"
     )
+    payment_reference: Optional[str] = Field(
+        None,
+        description="Payment reference/causale for bank transfer"
+    )
     
     @field_validator('commission_amount', mode='before')
     @classmethod
@@ -135,7 +139,8 @@ class CommissionAcknowledgementData(BaseModel):
                 ],
                 "deal_type": "sale",
                 "commission_amount": "5000.00",
-                "commission_due_on": "notary deed"
+                "commission_due_on": "notary deed",
+                "payment_reference": "Commission payment - Property Milano"
             }
         }
     )

@@ -55,3 +55,6 @@ Coordinate bancarie per il pagamento:
 Beneficiario: {{ agency.bank_account_beneficiary }}
 Banca: {{ agency.bank }}
 IBAN: {{ agency.iban }}
+{% if payment_reference %}
+Causale: {{ payment_reference }}
+{% endif %}

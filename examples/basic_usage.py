@@ -72,7 +72,8 @@ def main():
         ],
         deal_type="sale",
         commission_amount=Decimal("8500.00"),
-        commission_due_on="notary deed"
+        commission_due_on="notary deed",
+        payment_reference="Commission payment - Sale Via Montenapoleone 15"
     )
     
     commission_path = builder.create_commission_acknowledgement(

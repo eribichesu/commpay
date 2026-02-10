@@ -202,7 +202,8 @@ class TestDocumentBuilder:
             signatories=[sample_signatory],
             deal_type="sale",
             commission_amount=Decimal("5000.00"),
-            commission_due_on="notary deed"
+            commission_due_on="notary deed",
+            payment_reference="Commission payment - Property Milano"
         )
         
         rendered = builder.render_template("commission_acknowledgement.j2", commission_data)
@@ -212,6 +213,7 @@ class TestDocumentBuilder:
         assert "Milano" in rendered
         assert "5000.00" in rendered
         assert "Mario Rossi" in rendered
+        assert "Causale: Commission payment - Property Milano" in rendered
     
     def test_create_commission_from_template(
         self,

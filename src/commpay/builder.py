@@ -81,7 +81,8 @@ class DocumentBuilder:
             'signatories': [s.model_dump() for s in data.signatories],
             'deal_type': data.deal_type,
             'commission_amount': float(data.commission_amount),
-            'commission_due_on': data.commission_due_on
+            'commission_due_on': data.commission_due_on,
+            'payment_reference': data.payment_reference
         }
         
         # Render template

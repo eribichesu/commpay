@@ -120,6 +120,10 @@ def get_commission_data() -> CommissionAcknowledgementData:
     
     commission_due_on = input("  Commission due on (e.g., 'notary deed'): ").strip()
     
+    payment_reference = input("  Payment reference/Causale (optional, press Enter to skip): ").strip()
+    if not payment_reference:
+        payment_reference = None
+    
     # Signatories
     print("\nSignatory Information:")
     signatories = []
@@ -154,6 +158,7 @@ def get_commission_data() -> CommissionAcknowledgementData:
         deal_type=deal_type,
         commission_amount=commission_amount,
         commission_due_on=commission_due_on,
+        payment_reference=payment_reference,
     )
 
 
