@@ -126,38 +126,118 @@ class DocumentBuilder:
     
     def _add_text_content(self, c: canvas.Canvas, text: str) -> None:
         """
-        Add plain text content to PDF with proper formatting.
+        Add plain text content to PDF with proper formatting and print margins.
         
         Args:
             c: ReportLab canvas object
             text: Text content to add
         """
         width, height = A4
-        y_pos = height - 20*mm
+        
+        # Professional printing margins: 25mm top/bottom, 20mm left, 15mm right
+        left_margin = 20*mm
+        right_margin = 15*mm
+        top_margin = 25*mm
+        bottom_margin = 25*mm
+        
+        y_pos = height - top_margin
         line_height = 4.5*mm
+        max_width = width - left_margin - right_margin
         
         c.setFont("Helvetica", 10)
         
         for line in text.split('\n'):
-            if y_pos < 20*mm:  # Check if we need a new page
+            # Check if we need a new page
+            if y_pos < bottom_margin:
                 c.showPage()
                 c.setFont("Helvetica", 10)
-                y_pos = height - 20*mm
+                y_pos = height - top_margin
             
             # Handle empty lines
             if not line.strip():
-                y_pos -= line_height * 0.6
+                y_pos -= line_height * 0.7
                 continue
             
-            # Check for bold text (simple implementation)
-            if line.startswith('Oggetto:') or line.startswith('In fede'):
-                c.setFont("Helvetica-Bold", 10)
-                c.drawString(30*mm, y_pos, line)
-                c.setFont("Helvetica", 10)
-            else:
-                c.drawString(30*mm, y_pos, line)
+            # Wrap long lines to fit within margins
+            wrapped_lines = self._wrap_text_to_width(line, max_width, c)
             
-            y_pos -= line_height
+            for wrapped_line in wrapped_lines:
+                # Check page break for wrapped lines too
+                if y_pos < bottom_margin:
+                    c.showPage()
+                    c.setFont("Helvetica", 10)
+                    y_pos = height - top_margin
+                
+                # Apply formatting based on content
+                if wrapped_line.startswith('Oggetto:'):
+                    c.setFont("Helvetica-Bold", 11)
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    c.setFont("Helvetica", 10)
+                    y_pos -= line_height * 1.2  # Extra space after subject
+                elif wrapped_line.startswith('In fede'):
+                    c.setFont("Helvetica-Bold", 10)
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    c.setFont("Helvetica", 10)
+                    y_pos -= line_height
+                elif wrapped_line.startswith('Spett.le'):
+                    c.setFont("Helvetica-Bold", 10)
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    c.setFont("Helvetica", 10)
+                    y_pos -= line_height
+                elif wrapped_line.startswith('Coordinate bancarie'):
+                    c.setFont("Helvetica-Bold", 10)
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    c.setFont("Helvetica", 10)
+                    y_pos -= line_height
+                elif wrapped_line.strip().startswith(('1)', '2)', '3)')):
+                    # Numbered points - slightly indented
+                    c.drawString(left_margin + 5*mm, y_pos, wrapped_line)
+                    y_pos -= line_height * 1.1
+                elif wrapped_line.startswith('_________________________'):
+                    # Signature line
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    y_pos -= line_height * 0.8
+                else:
+                    c.drawString(left_margin, y_pos, wrapped_line)
+                    y_pos -= line_height
+    
+    def _wrap_text_to_width(self, text: str, max_width: float, c: canvas.Canvas) -> list:
+        """
+        Wrap text to fit within specified width.
+        
+        Args:
+            text: Text to wrap
+            max_width: Maximum width in points
+            c: Canvas object to measure text width
+            
+        Returns:
+            List of wrapped lines
+        """
+        if not text.strip():
+            return [text]
+        
+        # Check if text fits
+        if c.stringWidth(text, "Helvetica", 10) <= max_width:
+            return [text]
+        
+        # Need to wrap - split by words
+        words = text.split()
+        lines = []
+        current_line = []
+        
+        for word in words:
+            test_line = ' '.join(current_line + [word])
+            if c.stringWidth(test_line, "Helvetica", 10) <= max_width:
+                current_line.append(word)
+            else:
+                if current_line:
+                    lines.append(' '.join(current_line))
+                current_line = [word]
+        
+        if current_line:
+            lines.append(' '.join(current_line))
+        
+        return lines if lines else [text]
 
     
     def create_commission_acknowledgement(

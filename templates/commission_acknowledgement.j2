@@ -2,6 +2,7 @@
 {{ agency.street }}, n. {{ agency.street_number }}
 {{ agency.city }}
 
+
 Spett.le
 {% for recipient in recipients %}
 {% if recipient.is_company %}
@@ -17,13 +18,16 @@ CF: {{ recipient.codice_fiscale }}
 {% endif %}
 {% endfor %}
 
+
 Oggetto: Riconoscimento di provvigione di mediazione
+
 
 Immobile sito in {{ property.city_or_location }}
 {{ property.street }}, n. {{ property.street_number }}
 {% if property.notes %}
 Note: {{ property.notes }}
 {% endif %}
+
 
 Il/I sottoscritto/i {% for signatory in signatories %}{{ signatory.name }}{% if not loop.last %}, {% endif %}{% endfor %}, in qualità di {% for signatory in signatories %}{{ signatory.role }}{% if not loop.last %}, {% endif %}{% endfor %}, con riferimento alla {{ deal_type }} relativa all'immobile sopra indicato, con la presente riconosce/ono quanto segue:
 
@@ -35,6 +39,7 @@ La provvigione sarà corrisposta a: {{ commission_due_on }}
 
 Rimangono ferme e valide tutte le ulteriori pattuizioni contenute nell'incarico/proposta.
 
+
 {{ document_date.strftime('%d/%m/%Y') }}
 
 In fede
@@ -44,6 +49,7 @@ In fede
 _________________________
 
 {% endfor %}
+
 
 Coordinate bancarie per il pagamento:
 Beneficiario: {{ agency.bank_account_beneficiary }}
