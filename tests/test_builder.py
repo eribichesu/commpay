@@ -295,5 +295,5 @@ class TestDocumentBuilder:
         assert "Buyer Corp" in rendered
         assert "RSSMRA80A01H501X" in rendered
         assert "98765432101" in rendered
-        assert "lease" in rendered
+        assert "locazione" in rendered
 

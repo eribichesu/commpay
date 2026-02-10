@@ -29,13 +29,13 @@ Note: {{ property.notes }}
 {% endif %}
 
 
-Il/I sottoscritto/i {% for signatory in signatories %}{{ signatory.name }}{% if not loop.last %}, {% endif %}{% endfor %}, in qualità di {% for signatory in signatories %}{{ signatory.role }}{% if not loop.last %}, {% endif %}{% endfor %}, con riferimento alla {{ deal_type }} relativa all'immobile sopra indicato, con la presente riconosce/ono quanto segue:
+Il/I sottoscritto/i {% for signatory in signatories %}{{ signatory.name }}{% if not loop.last %}, {% endif %}{% endfor %}, in qualità di {% for signatory in signatories %}{{ signatory.role }}{% if not loop.last %}, {% endif %}{% endfor %}, con riferimento alla {% if deal_type == 'sale' %}compravendita{% elif deal_type == 'lease' %}locazione{% else %}{{ deal_type }}{% endif %} relativa all'immobile sopra indicato, con la presente riconosce/ono quanto segue:
 
-1) Il/I sottoscritto/i riconosce/ono della Vostra attività di mediazione svolta in relazione alla {{ deal_type }} e dichiara/no di accettarla.
+1) Il/I sottoscritto/i riconosce/ono della Vostra attività di mediazione svolta in relazione alla {% if deal_type == 'sale' %}compravendita{% elif deal_type == 'lease' %}locazione{% else %}{{ deal_type }}{% endif %} e dichiara/no di accettarla.
 
 2) Conseguentemente, il/i sottoscritto/i riconosce/ono come maturata in Vostro favore, senza alcuna ulteriore pretesa, la provvigione di Euro {{ "%.2f"|format(commission_amount) }}, oltre IVA se dovuta.
 
-La provvigione sarà corrisposta a: {{ commission_due_on }}
+La provvigione sarà corrisposta {% if commission_due_on == 'notary deed' %}al rogito{% else %}a: {{ commission_due_on }}{% endif %}.
 
 Rimangono ferme e valide tutte le ulteriori pattuizioni contenute nell'incarico/proposta.
 
