@@ -177,7 +177,7 @@ def main():
         if choice == "1":
             try:
                 data = get_commission_data()
-                output_path = builder.create_commission_acknowledgement(data)
+                output_path = builder.create_commission_acknowledgement_from_template(data)
                 print(f"\n✓ Commission acknowledgement generated successfully!")
                 print(f"  Location: {output_path}")
             except KeyboardInterrupt:
