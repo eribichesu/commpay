@@ -60,17 +60,35 @@ def get_commission_data() -> CommissionAcknowledgementData:
     recipients = []
     while True:
         print(f"\n  Recipient #{len(recipients) + 1}:")
-        role = input("    Role (seller/buyer/landlord/tenant): ").strip().lower()
-        if role not in ["seller", "buyer", "landlord", "tenant"]:
-            print("    Invalid role. Using 'buyer' as default.")
-            role = "buyer"
+        role = input("    Role (Buyer/Seller/Landlord/Tenant): ").strip()
+        if role not in ["Buyer", "Seller", "Landlord", "Tenant"]:
+            print("    Invalid role. Using 'Buyer' as default.")
+            role = "Buyer"
         
-        company_name = input("    Company name (optional, press Enter to skip): ").strip()
+        is_company = input("    Is this a company? (y/n): ").strip().lower() == 'y'
+        
+        if is_company:
+            company_name = input("    Company name: ").strip()
+            first_name = None
+            last_name = None
+        else:
+            company_name = None
+            first_name = input("    First name: ").strip()
+            last_name = input("    Last name: ").strip()
+        
+        codice_fiscale = input("    Codice Fiscale (CF): ").strip()
+        street = input("    Street address: ").strip()
+        city = input("    City: ").strip()
+        
         recipients.append(RecipientInfo(
             role=role,
-            company_name=company_name if company_name else None,
-            street=input("    Street address: ").strip(),
-            city=input("    City: ").strip(),
+            is_company=is_company,
+            company_name=company_name,
+            first_name=first_name,
+            last_name=last_name,
+            codice_fiscale=codice_fiscale,
+            street=street,
+            city=city,
         ))
         
         add_more = input("\n  Add another recipient? (y/n): ").strip().lower()
@@ -83,6 +101,7 @@ def get_commission_data() -> CommissionAcknowledgementData:
         city_or_location=input("  City/Location: ").strip(),
         street=input("  Street: ").strip(),
         street_number=input("  Street number: ").strip(),
+        notes=input("  Notes (optional, press Enter to skip): ").strip() or None,
     )
     
     # Deal information

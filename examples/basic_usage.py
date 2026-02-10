@@ -38,8 +38,10 @@ def main():
         document_number="CN-2026-001",
         agency=agency,
         recipient=RecipientInfo(
-            role="buyer",
+            role="Buyer",
+            is_company=True,
             company_name="ABC Properties Ltd",
+            codice_fiscale="12345678901",
             street="Via Verdi 45",
             city="Roma"
         ),
@@ -61,14 +63,19 @@ def main():
         agency=agency,
         recipients=[
             RecipientInfo(
-                role="seller",
+                role="Seller",
+                is_company=True,
                 company_name="Seller Properties S.r.l.",
+                codice_fiscale="98765432101",
                 street="Corso Buenos Aires 100",
                 city="Milano"
             ),
             RecipientInfo(
-                role="buyer",
-                company_name="Buyer Corp",
+                role="Buyer",
+                is_company=False,
+                first_name="Marco",
+                last_name="Bianchi",
+                codice_fiscale="BNCMRC75D15F205X",
                 street="Via Dante 50",
                 city="Roma"
             )
@@ -76,7 +83,8 @@ def main():
         property=PropertyInfo(
             city_or_location="Milano Centro",
             street="Via Montenapoleone",
-            street_number="15"
+            street_number="15",
+            notes="Residential unit, 2nd floor, entrance A"
         ),
         signatories=[
             SignatoryInfo(
@@ -114,8 +122,10 @@ def main():
             "bank_account_beneficiary": "Test Agency S.r.l.",
         },
         "recipient": {
-            "role": "seller",
+            "role": "Seller",
+            "is_company": True,
             "company_name": "Test Company",
+            "codice_fiscale": "11223344556",
             "street": "Test Address",
             "city": "Test City"
         },

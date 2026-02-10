@@ -25,11 +25,15 @@ class AgencyInfo(BaseModel):
 class RecipientInfo(BaseModel):
     """Recipient information model."""
     
-    role: Literal["seller", "buyer", "landlord", "tenant"] = Field(
+    role: Literal["Buyer", "Seller", "Landlord", "Tenant"] = Field(
         ..., 
         description="Recipient role in the transaction"
     )
-    company_name: Optional[str] = Field(None, description="Company name")
+    is_company: bool = Field(default=False, description="Whether recipient is a company or individual")
+    company_name: Optional[str] = Field(None, description="Company name (if company)")
+    first_name: Optional[str] = Field(None, description="First name (if individual)")
+    last_name: Optional[str] = Field(None, description="Last name (if individual)")
+    codice_fiscale: str = Field(..., min_length=1, description="Codice Fiscale (tax code)")
     street: str = Field(..., min_length=1, description="Street address")
     city: str = Field(..., min_length=1, description="City")
 
@@ -40,6 +44,7 @@ class PropertyInfo(BaseModel):
     city_or_location: str = Field(..., min_length=1, description="City or location")
     street: str = Field(..., min_length=1, description="Street name")
     street_number: str = Field(..., min_length=1, description="Street number")
+    notes: Optional[str] = Field(None, description="Optional notes to identify the unit")
 
 
 class SignatoryInfo(BaseModel):

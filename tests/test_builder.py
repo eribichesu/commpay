@@ -35,8 +35,10 @@ def sample_agency():
 def sample_recipient():
     """Sample recipient information."""
     return RecipientInfo(
-        role="buyer",
+        role="Buyer",
+        is_company=True,
         company_name="Test Company",
+        codice_fiscale="12345678901",
         street="Via Verdi 45",
         city="Roma"
     )
@@ -48,7 +50,8 @@ def sample_property():
     return PropertyInfo(
         city_or_location="Milano",
         street="Corso Buenos Aires",
-        street_number="100"
+        street_number="100",
+        notes="Apartment on 3rd floor"
     )
 
 
@@ -107,8 +110,11 @@ class TestDocumentBuilder:
             "document_number": "CN-2026-002",
             "agency": sample_agency.model_dump(),
             "recipient": {
-                "role": "seller",
-                "company_name": "ABC Corp",
+                "role": "Seller",
+                "is_company": False,
+                "first_name": "Mario",
+                "last_name": "Rossi",
+                "codice_fiscale": "RSSMRA80A01H501X",
                 "street": "Via Test 1",
                 "city": "Torino"
             },
@@ -165,14 +171,19 @@ class TestDocumentBuilder:
         
         recipients = [
             RecipientInfo(
-                role="seller",
+                role="Seller",
+                is_company=True,
                 company_name="Seller Corp",
+                codice_fiscale="12345678901",
                 street="Via Seller 1",
                 city="Milano"
             ),
             RecipientInfo(
-                role="buyer",
-                company_name="Buyer Corp",
+                role="Buyer",
+                is_company=False,
+                first_name="Giovanni",
+                last_name="Verdi",
+                codice_fiscale="VRDGNN85M01F205Z",
                 street="Via Buyer 2",
                 city="Roma"
             )

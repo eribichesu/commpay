@@ -143,10 +143,15 @@ class DocumentBuilder:
         c.drawString(30*mm, y_pos, "TO:")
         y_pos -= 5*mm
         c.setFont("Helvetica", 10)
-        if data.recipient.company_name:
+        if data.recipient.is_company:
             c.drawString(30*mm, y_pos, data.recipient.company_name)
             y_pos -= 4*mm
-        c.drawString(30*mm, y_pos, f"({data.recipient.role.title()})")
+        else:
+            c.drawString(30*mm, y_pos, f"{data.recipient.first_name} {data.recipient.last_name}")
+            y_pos -= 4*mm
+        c.drawString(30*mm, y_pos, f"({data.recipient.role})")
+        y_pos -= 4*mm
+        c.drawString(30*mm, y_pos, f"CF: {data.recipient.codice_fiscale}")
         y_pos -= 4*mm
         c.drawString(30*mm, y_pos, data.recipient.street)
         y_pos -= 4*mm
@@ -231,10 +236,15 @@ class DocumentBuilder:
         c.setFont("Helvetica", 10)
         
         for recipient in data.recipients:
-            if recipient.company_name:
+            if recipient.is_company:
                 c.drawString(30*mm, y_pos, f"• {recipient.company_name}")
                 y_pos -= 4*mm
-            c.drawString(35*mm, y_pos, f"Role: {recipient.role.title()}")
+            else:
+                c.drawString(30*mm, y_pos, f"• {recipient.first_name} {recipient.last_name}")
+                y_pos -= 4*mm
+            c.drawString(35*mm, y_pos, f"Role: {recipient.role}")
+            y_pos -= 4*mm
+            c.drawString(35*mm, y_pos, f"CF: {recipient.codice_fiscale}")
             y_pos -= 4*mm
             c.drawString(35*mm, y_pos, f"Address: {recipient.street}, {recipient.city}")
             y_pos -= 5*mm
@@ -248,7 +258,13 @@ class DocumentBuilder:
         c.drawString(30*mm, y_pos, f"{data.property.street} {data.property.street_number}")
         y_pos -= 4*mm
         c.drawString(30*mm, y_pos, data.property.city_or_location)
-        y_pos -= 10*mm
+        y_pos -= 4*mm
+        if data.property.notes:
+            c.setFont("Helvetica-Oblique", 9)
+            c.drawString(30*mm, y_pos, f"Notes: {data.property.notes}")
+            y_pos -= 4*mm
+            c.setFont("Helvetica", 10)
+        y_pos -= 6*mm
         
         # Deal information
         c.setFont("Helvetica-Bold", 11)
